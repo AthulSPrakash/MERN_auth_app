@@ -4,9 +4,7 @@ const r = 180/Math.PI
 
 async function fetch(){
     const res = await axios('https://cdn.jsdelivr.net/gh/apilayer/restcountries@3dc0fb110cd97bce9ddf27b3e8e1f7fbe115dc3c/src/main/resources/countriesV2.json')
-    res.data.map(d=>{
-        d.population>=84497 && D.push([d.latlng[0]/r,d.latlng[1]/r])
-    })
+    res.data.map( d => d.population>=84497 && D.push([d.latlng[0]/r,d.latlng[1]/r]) )
 }
 fetch().then(()=>{
     D = D.slice(0,20)
