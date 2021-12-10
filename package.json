@@ -1,7 +1,7 @@
 {
   "name": "test",
   "version": "1.0",
-  "description": "Fetch countries list and find their coordinates",
+  "description": "Find distance between countries coordinates",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
