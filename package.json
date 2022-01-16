@@ -1,7 +1,6 @@
 {
   "name": "test",
   "version": "1.0",
-  "description": "Find distance between countries coordinates",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -10,6 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.24.0"
+    "axios": "^0.24.0",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^12.0.4",
+    "express": "^4.17.2",
+    "joi": "^17.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.6"
   }
 }

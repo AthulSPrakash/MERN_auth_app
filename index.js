@@ -1,21 +1,30 @@
-const axios = require('axios')
-let D = []
-const r = 180/Math.PI
+const express = require('express')
+const cors = require('cors')
+const mongoose = require('mongoose')
+const Router = require('./routes')
+const app = express()
 
-async function fetch(){
-    const res = await axios('https://cdn.jsdelivr.net/gh/apilayer/restcountries@3dc0fb110cd97bce9ddf27b3e8e1f7fbe115dc3c/src/main/resources/countriesV2.json')
-    res.data.map( d => d.population>=84497 && D.push([d.latlng[0]/r,d.latlng[1]/r]) )
-}
-fetch().then(()=>{
-    let sum = 0
-    for(let i = 0; i<20; i++)
-        for(let j = i+1; j<20; j++){
-            const calc = Math.sin((D[j][0]-D[i][0])/2)**2 
-                + Math.cos(D[i][0]) * Math.cos(D[j][0])
-                * Math.sin((D[j][1]-D[i][1])/2)**2
-            let distance = 2 * 6731 * Math.asin(Math.sqrt(calc))
-            distance = Math.round(distance * 1e2)/1e2
-            sum += distance
-        }
-    console.log(Math.round(sum * 1e2)/1e2)
-})
+app.use(cors())
+
+const dotenv = require('dotenv')
+dotenv.config()
+
+const port = process.env.PORT || 5000
+
+const username = process.env.USER_NAME
+const password = process.env.PASSWORD
+const cluster = process.env.CLUSTER
+const dbname = process.env.DB_NAME
+
+mongoose.connect(`mongodb+srv://${username}:${password}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+)
+
+app.use(express.json())
+
+app.use(Router)
+
+app.listen(port,()=>console.log(`Server listening on port ${port}`))
