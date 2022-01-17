@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { Link } from "react-router-dom"
 
-function Reg({url}) {
+function Reg() {
+  const url = process.env.REACT_APP_API_URL
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -44,9 +46,9 @@ function Reg({url}) {
         }
         fetch(`${url}/api/register`, requestOptions)
         .then(res => res.json())
-        .then(data =>{
-            setRegComplete(true)
-        })
+        .then(data => {
+          setRegComplete(true)
+        }).catch(err => console.log(err))
       }
     }else{
       console.log('Missing field')
@@ -54,9 +56,14 @@ function Reg({url}) {
   }
 
   return (
-    <div className='reg-page'>
-      {!regComplete?
-        <form>
+    <>
+    {!regComplete?
+      <div className='reg-page'>
+        <header className='reg-header'>
+          <Link to={'/'}>back to home</Link>
+          <Link to={'/login'}>Already a user, click here to login</Link>
+        </header>
+        <form className='reg-form'>
           <input 
             type="text" 
             name="firstname" 
@@ -121,13 +128,15 @@ function Reg({url}) {
           />
           <button onClick={handleSubmit}>SUBMIT</button>
         </form>
+      </div>
       :
-        <div>
-          <h1 className='greeting'>Registration Successful</h1>
-          <h2 className='greeting'>Welcome,{formData.firstname}</h2>
-        </div>  
-      }
-    </div>
+      <div className='greeting'>
+        <h1 className='greeting-text'>Registration Successful</h1>
+        <h2 className='greeting-name'>Welcome, {formData.firstname}</h2>
+        <Link to={'/login'}>Login to your account</Link>
+      </div>  
+    }
+    </>
   )
 }
 

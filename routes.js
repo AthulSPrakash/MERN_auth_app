@@ -32,7 +32,7 @@ app.post('/api/register', async (req,res)=>{
 
     try{
         await user.save()
-        res.json('Reg successful')
+        res.json('User successfully added')
     }catch (err){
         res.status(500).json(err)
     }

@@ -1,7 +1,9 @@
-import { func } from 'joi'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import Home from './home' 
 
-function Login({url}) {
+function Login() {
+    const url = process.env.REACT_APP_API_URL
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -32,26 +34,21 @@ function Login({url}) {
             .then(data =>{
                 setUserData(data)
                 setLogin(true)
-            })
+            }).catch(err => console.log(err))
         }else{
             console.log('Missing field')
         }
     }
 
-    function showAllUsers(){
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'auth-token': userData.token},
-        }
-        fetch(`${url}/api/users`, requestOptions)
-        .then(res => res.json())
-        .then(data =>console.log(data))
-    }
-
     return (
-        <div className='login-page'>
-            { !login ? 
-                <form>
+        <>
+        { !login ? 
+            <div className='login-page'>
+                <header className='login-header'>
+                    <Link to={'/'}>back to home</Link>
+                    <Link to={'/reg'}>not a user? click here to sign up</Link>
+                </header>
+                <form className='login-form'>
                     <input 
                     type="email" 
                     name="email" 
@@ -70,13 +67,11 @@ function Login({url}) {
                     />
                     <button onClick={handleSubmit}>SUBMIT</button>
                 </form>
+            </div>
             :
-                <div>
-                    <h1 className='greeting'>Welcome back, {userData.name}</h1>
-                    <button onClick={showAllUsers}>See other users</button>
-                </div>
-            }
-        </div>
+            <Home user={userData.name} token={userData.token} api_url={url}/>
+        }
+        </>
     )
 }
 
