@@ -1,7 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const Router = require('./routes')
+const Login = require('./routes/login')
+const Register = require('./routes/register')
+const UsersList = require('./routes/users')
 const app = express()
 
 app.use(cors())
@@ -25,6 +27,8 @@ mongoose.connect(`mongodb+srv://${username}:${password}@${cluster}.mongodb.net/$
 
 app.use(express.json())
 
-app.use(Router)
+app.use('/api/login',Login)
+app.use('/api/register',Register)
+app.use('/api/users',UsersList)
 
 app.listen(port,()=>console.log(`Server listening on port ${port}`))
