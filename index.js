@@ -24,11 +24,13 @@ mongoose.connect(`mongodb+srv://${username}:${password}@${cluster}.mongodb.net/$
         useUnifiedTopology: true
     }
 )
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.log(err))
 
 app.use(express.json())
 
-app.use('/api/login',Login)
-app.use('/api/register',Register)
-app.use('/api/users',UsersList)
+app.use('/api/login', Login)
+app.use('/api/register', Register)
+app.use('/api/users', UsersList)
 
 app.listen(port,()=>console.log(`Server listening on port ${port}`))

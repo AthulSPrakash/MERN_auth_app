@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import Home from './home' 
+import Home from './home'
 
 function Login() {
     const url = process.env.REACT_APP_API_URL
@@ -8,7 +7,6 @@ function Login() {
         email: '',
         password: ''
     })
-
     const [userData, setUserData] = useState('')
     const [login, setLogin] = useState(false)
 
@@ -20,7 +18,7 @@ function Login() {
             })
         })
     }
-
+    
     function handleSubmit(e){
         e.preventDefault()
         if(formData.email && formData.password){
@@ -44,10 +42,6 @@ function Login() {
         <>
         { !login ? 
             <div className='login-page'>
-                <header className='login-header'>
-                    <Link to={'/'}>back to home</Link>
-                    <Link to={'/reg'}>not a user? click here to sign up</Link>
-                </header>
                 <form className='login-form'>
                     <input 
                     type="email" 
@@ -65,11 +59,17 @@ function Login() {
                     placeholder='Password'
                     required={true}
                     />
-                    <button onClick={handleSubmit}>SUBMIT</button>
+                    <button 
+                        onClick={handleSubmit}
+                    >
+                        SUBMIT
+                    </button>
                 </form>
             </div>
             :
-            <Home user={userData.name} token={userData.token} api_url={url}/>
+            <>
+                <Home user={userData.name} token={userData.token} api_url={url}/>
+            </>
         }
         </>
     )

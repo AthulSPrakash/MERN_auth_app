@@ -59,10 +59,6 @@ function Reg() {
     <>
     {!regComplete?
       <div className='reg-page'>
-        <header className='reg-header'>
-          <Link to={'/'}>back to home</Link>
-          <Link to={'/login'}>Already a user, click here to login</Link>
-        </header>
         <form className='reg-form'>
           <input 
             type="text" 
