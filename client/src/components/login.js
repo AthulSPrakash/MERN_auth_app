@@ -1,14 +1,15 @@
+import '../styles/sign.css'
 import { useState } from 'react'
-import Home from './home'
+import { NavLink } from 'react-router-dom'
 
-function Login() {
+function Login({userLoggedIn, userData}) {
+
     const url = process.env.REACT_APP_API_URL
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     })
-    const [userData, setUserData] = useState('')
-    const [login, setLogin] = useState(false)
 
     function handleChange(e){
         setFormData(prevFormData=>{
@@ -21,6 +22,7 @@ function Login() {
     
     function handleSubmit(e){
         e.preventDefault()
+        userLoggedIn(true)
         if(formData.email && formData.password){
             const requestOptions = {
                 method: 'POST',
@@ -30,48 +32,57 @@ function Login() {
             fetch(`${url}/api/login`, requestOptions)
             .then(res => res.json())
             .then(data =>{
-                setUserData(data)
-                setLogin(true)
+                userData(data)
             }).catch(err => console.log(err))
         }else{
             console.log('Missing field')
         }
     }
 
+    function navStyle(isActive){
+        return{
+          textDecoration: 'none',
+          fontWeight: '600',
+          fontFamily: 'Arial, Helvetica, sans-serif',
+          color: isActive ? 'blue' : 'grey'
+        }
+    }    
+
     return (
-        <>
-        { !login ? 
-            <div className='login-page'>
-                <form className='login-form'>
-                    <input 
+        <div className='login-page'>
+            <nav className='login-nav'>
+                <NavLink 
+                    to={'/'}
+                    style={({isActive})=>navStyle(isActive)}
+                >
+                    Back to home
+                </NavLink>
+            </nav>
+            <form className='login-form'>
+                <input 
                     type="email" 
                     name="email" 
                     value={formData.email} 
                     onChange={handleChange}
                     placeholder='Email'
                     required={true}
-                    />
-                    <input 
+                />
+                <input 
                     type="password" 
                     name="password" 
                     value={formData.password} 
                     onChange={handleChange}
                     placeholder='Password'
                     required={true}
-                    />
-                    <button 
-                        onClick={handleSubmit}
-                    >
-                        SUBMIT
-                    </button>
-                </form>
-            </div>
-            :
-            <>
-                <Home user={userData.name} token={userData.token} api_url={url}/>
-            </>
-        }
-        </>
+                />
+                <button 
+                    className='sign-btn'
+                    onClick={handleSubmit}
+                >
+                    SUBMIT
+                </button>
+            </form>
+        </div>
     )
 }
 

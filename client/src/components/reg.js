@@ -1,5 +1,6 @@
+import '../styles/sign.css'
 import { useState } from 'react'
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 function Reg() {
   const url = process.env.REACT_APP_API_URL
@@ -55,10 +56,27 @@ function Reg() {
     }
   }
 
+  function navStyle(isActive){
+    return{
+      textDecoration: 'none',
+      fontWeight: '600',
+      fontFamily: 'Arial, Helvetica, sans-serif',
+      color: isActive ? 'blue' : 'grey'
+    }
+  }
+
   return (
     <>
     {!regComplete?
       <div className='reg-page'>
+        <nav className='reg-nav'>
+          <NavLink 
+            to={'/'}
+            style={({isActive})=>navStyle(isActive)}
+          >
+            Back to home
+          </NavLink>
+        </nav>
         <form className='reg-form'>
           <input 
             type="text" 
@@ -122,14 +140,19 @@ function Reg() {
             required={true}
             min={8}
           />
-          <button onClick={handleSubmit}>SUBMIT</button>
+          <button className='sign-btn' onClick={handleSubmit}>SUBMIT</button>
         </form>
       </div>
       :
       <div className='greeting'>
         <h1 className='greeting-text'>Registration Successful</h1>
-        <h2 className='greeting-name'>Welcome, {formData.firstname}</h2>
-        <Link to={'/login'}>Login to your account</Link>
+        <h2 className='greeting-name'>Welcome, {formData.firstname} {formData.lastname}</h2>
+        <NavLink 
+          to={'/login'}
+          style={({isActive})=>navStyle(isActive)}
+        >
+          Login to your account
+        </NavLink>
       </div>  
     }
     </>

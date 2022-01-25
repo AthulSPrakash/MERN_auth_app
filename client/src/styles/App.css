@@ -1,0 +1,23 @@
+@import url('./colors.css');
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.App{
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+}
+.app-nav{
+  position: absolute;
+  top: 1.5em;
+  right: 1.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
