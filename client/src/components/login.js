@@ -1,17 +1,18 @@
 import '../styles/sign.css'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { GoogleLogin } from 'react-google-login'
 
 function Login({userLoggedIn, userData}) {
 
     const url = process.env.REACT_APP_API_URL
-
+    const clientId = process.env.REACT_APP_OAUTH_ID
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     })
 
-    function handleChange(e){
+    const handleChange = (e) => {
         setFormData(prevFormData=>{
             return({
                 ...prevFormData,
@@ -20,7 +21,7 @@ function Login({userLoggedIn, userData}) {
         })
     }
     
-    function handleSubmit(e){
+    const handleSubmit = (e) => {
         e.preventDefault()
         userLoggedIn(true)
         if(formData.email && formData.password){
@@ -39,25 +40,50 @@ function Login({userLoggedIn, userData}) {
         }
     }
 
-    function navStyle(isActive){
-        return{
-          textDecoration: 'none',
-          fontWeight: '600',
-          fontFamily: 'Arial, Helvetica, sans-serif',
-          color: isActive ? 'blue' : 'grey'
+    //Google auth
+    const onSuccess = async res => {
+        // console.log('[login success] User:', res)
+        userLoggedIn(true)
+        const token = {token: res.tokenId}
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(token)
         }
-    }    
+        fetch(`${url}/api/gauth`, requestOptions)
+        .then(response => response.json())
+        .then(data =>{
+            userData(data)
+        }).catch(err => console.log(err))
+    }
+    
+    const onFailure = res => {
+        console.log('[login failed] Res:', res)
+    }
+    //------------   
 
     return (
         <div className='login-page'>
             <nav className='login-nav'>
                 <NavLink 
                     to={'/'}
-                    style={({isActive})=>navStyle(isActive)}
+                    className='home-btn'
                 >
-                    Back to home
+                    <i className="fa-solid fa-house"></i>
                 </NavLink>
             </nav>
+            <div className='gauth'>
+                <GoogleLogin
+                    clientId={clientId}
+                    buttonText='Login with Google'
+                    onSuccess={onSuccess}
+                    onFailure={onFailure}
+                    cookiePolicy={'single_host_origin'}
+                    isSignedIn={true}
+                    className='google'
+                />
+            </div>
+            <p className='or'>OR</p>
             <form className='login-form'>
                 <input 
                     type="email" 
@@ -79,7 +105,7 @@ function Login({userLoggedIn, userData}) {
                     className='sign-btn'
                     onClick={handleSubmit}
                 >
-                    SUBMIT
+                    Login
                 </button>
             </form>
         </div>

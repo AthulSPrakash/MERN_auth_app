@@ -22,8 +22,7 @@ app.post('/', async (req,res)=>{
     const token = JWT.sign({_id: user._id}, process.env.TOKEN_KEY)
     const data = {
         token:token,
-        fname: user.firstname,
-        lname: user.lastname
+        name: user.username,
     }
     res.header('auth-token', token).json(data)
 })

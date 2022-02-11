@@ -1,12 +1,14 @@
 import '../styles/dashboard.css'
 import { useState } from "react"
+import { useGoogleLogout } from 'react-google-login'
 
 function Dashboard({userData, api_url}) {
 
+    const clientId = process.env.REACT_APP_OAUTH_ID
     const [users, setUsers] = useState()
     const [tableVisible, setTableVisible] = useState(false)
 
-    function showAllUsers(){
+    const showAllUsers = () => {
         if(!users){
             const requestOptions = {
                 method: 'GET',
@@ -23,12 +25,18 @@ function Dashboard({userData, api_url}) {
         setTableVisible(true)
     }
 
-    function closeAllUsers(){
+    const closeAllUsers = () => {
         document.querySelector('.users-table').style.display = 'none'
         setTableVisible(false)
     }
 
-    function logout() {
+    const { signOut } = useGoogleLogout({
+        clientId,
+        // onLogoutSuccess,
+        // onFailure
+    })
+    const logout = () => {
+        signOut()
         localStorage.clear()
         window.location.href = '/'
     }
@@ -36,8 +44,10 @@ function Dashboard({userData, api_url}) {
     return (
         <div className='dashboard'>
             <header className='dash-header'>
-                <h1 className='user-name'>{userData.fname} {userData.lname}</h1>
-                <button className='logout-btn' onClick={logout}>Logout</button>
+                <h1 className='user-name'>{userData.name}</h1>
+                <button className='logout-btn' onClick={logout}>
+                    <i className="fa-solid fa-right-from-bracket"></i>
+                </button>
             </header>
             <main className='dash-main'>
                 {!tableVisible?
@@ -57,7 +67,7 @@ function Dashboard({userData, api_url}) {
                         {users.map(item=>{
                             return(
                             <tr key={users.indexOf(item)}>
-                                <td>{item.firstname}</td>
+                                <td>{item.username}</td>
                             </tr>
                             )
                         })}

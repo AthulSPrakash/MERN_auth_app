@@ -3,6 +3,9 @@ form{
     flex-direction: column;
     align-items: center;
     gap: 1em;
+    padding: 1em;
+    background-color: var(--bg);
+    border-radius: 1em;
 }
 input{
     padding: 0.5em 0.75em;
@@ -12,7 +15,7 @@ input{
     border: none;
     outline: none;
     background: var(--dim);
-    font-size: 1.2em;
+    font-size: 1em;
 }
 input:focus{
     outline: 2px solid var(--primary);
@@ -23,19 +26,76 @@ input:focus{
     background-color: var(--primary);
     color: var(--txt);
     padding: 0.75em 1.25em;
-    border-radius: 5px;
+    border-radius: 100px;
     cursor: pointer;
     font-weight: bold;
     letter-spacing: 0.05em;
     transition: 0.2s;
 }
 .sign-btn:hover{
-    background: var(--secondary);
     transition: 0.2s;
+    background: var(--secondary);
 }
 .reg-page, .login-page{
-    width: 100vw;
     display: flex;
     flex-direction: column;
     padding: 1.5em;
+    margin-top: 5em;
+}
+.gauth{
+    border-radius: 100px;
+    overflow: hidden;
+    margin: 1em 0;
+}
+.fa-right-from-bracket{
+    font-size: 1.25em;
+}
+.google{
+    width: 100%;
+    cursor: pointer;
+}
+.or{
+    color: var(--txt);
+    margin-bottom: 1em;
+    text-align: center;
+}
+.home-btn{
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Arial, Helvetica, sans-serif';
+    position: absolute;
+    top: 1.5em;
+    left: 1.5em;
+    background: var(--bg);
+    width: 3.2em;
+    height: 3.2em;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+.home-btn:hover{
+    transition: 0.2s;
+    background: var(--secondary);
+    color: var(--txt);
+}
+.greeting{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.login-redirect{
+    background: var(--btn-bg);
+    border-radius: 100px;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 1.5em;
+}
+.greeting-name, .greeting-text{
+    color: var(--txt);
 }

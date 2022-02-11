@@ -10,24 +10,26 @@ import Home from './components/home'
 
 function App() {
   const url = process.env.REACT_APP_API_URL
+  // const key = process.env.REACT_APP_OAUTH_KEY
   const [userDetail, setUserDetail] = useState()
 
   const navigate = useNavigate()
 
-  function navStyle(isActive){
+  const navStyle = (isActive) => {
     return{
       textDecoration: 'none',
       fontWeight: '600',
       fontFamily: 'Arial, Helvetica, sans-serif',
-      color: isActive ? 'blue' : 'grey'
+      color: isActive ? 'white' : 'grey',
+      letterSpacing: '0.05em'
     }
   }
 
-  function userLoggedIn(loggedIn) {
+  const userLoggedIn = (loggedIn) =>{
     if(loggedIn) document.querySelector('.app-nav').style.display = 'none'
   }
 
-  function userDetails(data) {
+  const userDetails = (data) => {
     setUserDetail(data)
     navigate('dashboard')
   }
@@ -41,6 +43,7 @@ function App() {
         >
           Login
         </NavLink>
+        |
         <NavLink 
           to={'/register'}
           style={({isActive})=>navStyle(isActive)}
@@ -52,7 +55,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='dashboard' element={<Dashboard userData={userDetail} api_url={url}/>} />
-          <Route path='register' element={<Reg />} />
+          <Route path='register' element={<Reg userLoggedIn={userLoggedIn} userData={userDetails}/>} />
           <Route path='login' element={<Login userLoggedIn={userLoggedIn} userData={userDetails}/>} />
           <Route path='*' element={<Error/>} />
         </Routes>

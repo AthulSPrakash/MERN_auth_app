@@ -1,21 +1,21 @@
 import '../styles/sign.css'
 import { useState } from 'react'
 import { NavLink } from "react-router-dom"
+import { GoogleLogin } from 'react-google-login'
 
-function Reg() {
+function Reg({userLoggedIn, userData}) {
+
   const url = process.env.REACT_APP_API_URL
+  const clientId = process.env.REACT_APP_OAUTH_ID
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
+    username: '',
     email: '',
-    phone: '',
-    address: '',
     password: '',
     confirmPass: ''
   })
   const [regComplete, setRegComplete] = useState(false)
 
-  function handleChange(e){
+  const handleChange = (e) => {
     setFormData(prevFormData=>{
       return({
           ...prevFormData,
@@ -24,20 +24,18 @@ function Reg() {
     })
   }
 
-  function handleSubmit(e){
+  const handleSubmit = (e) => {
     e.preventDefault()
-    if(formData.firstname && formData.lastname && formData.email 
-      && formData.phone && formData.address && formData.password 
+    userLoggedIn(true)
+    if(formData.username && formData.email 
+      && formData.password 
       && formData.confirmPass){
       if(formData.confirmPass!==formData.password){
         console.log('mismatch')
       }else{
         const regData = {
-          firstname: formData.firstname,
-          lastname: formData.lastname,
+          username: formData.username,
           email: formData.email ,
-          phone: formData.phone,
-          address: formData.address,
           password: formData.password 
         }
         const requestOptions = {
@@ -56,14 +54,27 @@ function Reg() {
     }
   }
 
-  function navStyle(isActive){
-    return{
-      textDecoration: 'none',
-      fontWeight: '600',
-      fontFamily: 'Arial, Helvetica, sans-serif',
-      color: isActive ? 'blue' : 'grey'
+  //Google auth
+  const onSuccess = async res => {
+    // console.log('[login success] User:', res)
+    userLoggedIn(true)
+    const token = {token: res.tokenId}
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(token)
     }
+    fetch(`${url}/api/gauth`, requestOptions)
+    .then(response => response.json())
+    .then(data =>{
+        userData(data)
+    }).catch(err => console.log(err))
   }
+
+  const onFailure = res => {
+      console.log('[login failed] Res:', res)
+  }
+  //------------
 
   return (
     <>
@@ -72,27 +83,30 @@ function Reg() {
         <nav className='reg-nav'>
           <NavLink 
             to={'/'}
-            style={({isActive})=>navStyle(isActive)}
+            className='home-btn'
           >
-            Back to home
+            <i className="fa-solid fa-house"></i>
           </NavLink>
         </nav>
+        <div className='gauth'>
+          <GoogleLogin
+            clientId={clientId}
+            buttonText='Login with Google'
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            cookiePolicy={'single_host_origin'}
+            className='google'
+            isSignedIn={true}
+          />
+        </div>
+        <p className='or'>OR</p>
         <form className='reg-form'>
           <input 
             type="text" 
-            name="firstname" 
-            value={formData.firstname} 
+            name="username" 
+            value={formData.username} 
             onChange={handleChange} 
-            placeholder='First Name'
-            required={true}
-            max={255}
-          />
-          <input 
-            type="text" 
-            name="lastname" 
-            value={formData.lastname} 
-            onChange={handleChange}
-            placeholder='Last Name'
+            placeholder='User Name'
             required={true}
             max={255}
           />
@@ -104,23 +118,6 @@ function Reg() {
             placeholder='Email'
             required={true}
             max={255}
-          />
-          <input 
-            type="text" 
-            name="address" 
-            value={formData.address} 
-            onChange={handleChange}
-            placeholder='Address'
-            required={true}
-          />
-          <input 
-            type="text" 
-            name="phone" 
-            value={formData.phone} 
-            onChange={handleChange}
-            placeholder='Phone'
-            required={true}
-            max={10}
           />
           <input 
             type="password" 
@@ -140,16 +137,16 @@ function Reg() {
             required={true}
             min={8}
           />
-          <button className='sign-btn' onClick={handleSubmit}>SUBMIT</button>
+          <button className='sign-btn' onClick={handleSubmit}>Register</button>
         </form>
       </div>
       :
       <div className='greeting'>
         <h1 className='greeting-text'>Registration Successful</h1>
-        <h2 className='greeting-name'>Welcome, {formData.firstname} {formData.lastname}</h2>
+        <h2 className='greeting-name'>Welcome, {formData.username}</h2>
         <NavLink 
           to={'/login'}
-          style={({isActive})=>navStyle(isActive)}
+          className='login-redirect'
         >
           Login to your account
         </NavLink>

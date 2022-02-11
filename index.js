@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const Login = require('./routes/login')
+const Google = require('./routes/google')
 const Register = require('./routes/register')
 const UsersList = require('./routes/users')
 const app = express()
@@ -29,6 +30,7 @@ mongoose.connect(`mongodb+srv://${username}:${password}@${cluster}.mongodb.net/$
 
 app.use(express.json())
 
+app.use('/api/gauth', Google)
 app.use('/api/login', Login)
 app.use('/api/register', Register)
 app.use('/api/users', UsersList)

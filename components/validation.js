@@ -1,12 +1,11 @@
 const Joi = require('joi')
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.OAUTH_ID)
 
 const regValidation = data => {
     const schema = Joi.object({
-        firstname: Joi.string().max(255).required(),
-        lastname: Joi.string().max(255).required(),
+        username: Joi.string().max(255).required(),
         email: Joi.string().max(255).required().email(),
-        phone: Joi.string().max(10).required(),
-        address: Joi.string().required(),
         password: Joi.string().min(8).required()
     })
 
@@ -24,7 +23,25 @@ const loginValidation = data => {
     return error
 }
 
+const googleAuth = async token => {
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.OAUTH_ID
+    })
+
+    const payload = ticket.getPayload()
+    // console.log('Paylod:', payload)
+
+    console.log(`User ${payload.name} verified`)
+
+    const { sub, name, email, picture } = payload
+    const userId = sub
+
+    return { id:userId, name:name, email:email, image:picture}
+}
+
 module.exports = {
     regValidation,
-    loginValidation
+    loginValidation,
+    googleAuth
 }

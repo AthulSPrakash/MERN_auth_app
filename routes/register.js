@@ -17,11 +17,8 @@ app.post('/', async (req,res)=>{
     const cipherPass = await bcrypt.hash(req.body.password, salt)
 
     const user = new userModel({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
+        username: req.body.username,
         email: req.body.email,
-        phone: req.body.phone,
-        address:req.body.address,
         password: cipherPass
     })
 

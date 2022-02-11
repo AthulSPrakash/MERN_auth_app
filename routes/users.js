@@ -6,8 +6,7 @@ app.get('/', verify, async (req,res)=>{
     const users = await userModel.find({})
     const list = users.map(i=>{
         return({
-            firstname: i.firstname,
-            lastname: i.lastname,
+            username: i.username,
         })
     })
     try{
